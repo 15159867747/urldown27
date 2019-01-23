@@ -13,8 +13,9 @@ sys.setdefaultencoding('utf-8')
 
 class MongoDB(object):
     def __init__(self):
-        client = pymongo.MongoClient('localhost', 27017) #连接服务器
-        db = client.GoodBooks #选择数据库
+        #client = pymongo.MongoClient('localhost', 27017) #连接服务器
+        client = pymongo.MongoClient('localhost')
+        db = client['GoodBooks'] #选择数据库
         self.newUrlsCol = db.newUrls #选择集合newUrls
         self.oldUrlsCol = db.oldUrls #选择集合oldUrls
         self.bookCol = db.book #选择集合book
@@ -29,7 +30,7 @@ class MongoDB(object):
         #只有既不在未爬取集合，也不在已爬取集合，才加入该url
         if self.newUrlsCol.find({'url':url}).count() == self.oldUrlsCol.find({'url':url}).count() == 0:
             self.newUrlsCol.insert({'url': url})
-    #在一堆url中取新的url进行保存    
+    #在一堆url中取新的url进行保存    1
     def add_new_urls(self, urls, data):
         if urls is None or len(urls) == 0:
             return
@@ -56,7 +57,7 @@ class MongoDB(object):
          
     #html输出器功能
     def collect_data(self, data, recommendUrls):
-        if data is None or data['hotReview'] == 'None': #存在书籍由于评分过低或者信息不全被舍弃但是还有推荐书籍的情况
+        if data is None  == 'None': #存在书籍由于评分过低或者信息不全被舍弃但是还有推荐书籍的情况
             return
         data['recommendUrls'] = recommendUrls
         self.bookCol.insert(data)
@@ -102,8 +103,11 @@ class MongoDB(object):
     def search_book_by_url(self, url):
         doc = self.bookCol.find_one({'url':url}) #正常情况下url唯一
         return doc
-            
-    
+
+if __name__ == "__main__":
+    rootUrl = "https://book.douban.com/subject/1477390/"  # 起始地址为《代码大全》
+    mdb=MongoDB()
+    mdb.add_new_url(rootUrl)
     
     
     

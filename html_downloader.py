@@ -94,7 +94,7 @@ if __name__ == "__main__":
     Url = "https://book.douban.com/subject/1477390/"
     downloader = HtmlDownloader()
     parser= html_parser.HtmlParser()
-    #print downloader.download(Url)
+    print downloader.download(Url)
     parser._get_new_urls(downloader.download(Url))
 
 

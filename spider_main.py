@@ -50,9 +50,10 @@ if __name__ == "__main__":
     rootUrl = "https://book.douban.com/subject/1477390/"  # 起始地址为《代码大全》
     obj_spider = SpiderMain()
     # 爬取之前先保存两个cookie文件，防止403forbidden
-    # obj_spider.downloader.save_cookie("cookie1.txt", rootUrl) #未登录运行
-    # obj_spider.downloader.save_cookie("cookie2.txt", rootUrl) #登录运行
+    #obj_spider.downloader.save_cookie("cookie1.txt", rootUrl) #未登录运行
+    #obj_spider.downloader.save_cookie("cookie2.txt", rootUrl) #登录运行
 
-    # obj_spider.craw(rootUrl, 7.9) #开始爬取，默认最低评分为7.9
-    # obj_spider.mongodb.output_xls() #以xls格式输出爬取结果
+    obj_spider.craw(rootUrl, 0) #开始爬取，默认最低评分为7.9
+    #obj_spider.mongodb.output_xls() #以xls格式输出爬取结果
+
     print 'All down!'

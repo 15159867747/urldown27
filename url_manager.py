@@ -28,7 +28,7 @@ class UrlManager(object):
     def has_new_url(self):
         return len(self.new_urls) != 0
         
-    def get_new_url(self):
+    def get_new_url(self):  #获得最新的url
         new_url = self.new_urls[0] #获取队头的元素
         del self.new_urls[0] #删除队头元素
         self.old_urls.add(new_url)

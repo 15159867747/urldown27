@@ -33,7 +33,7 @@ class HtmlParser(object):
         except:
             return None
 
-    def _get_hot_review(self, soup):
+    '''def _get_hot_review(self, soup):
         try:  # 没有热评，返回空
             firstReview = soup.find('div', class_='rr').find('a')
             url = firstReview['href']
@@ -47,7 +47,7 @@ class HtmlParser(object):
             hotReviewFormatted = hotReviewFormatted.replace('<br> <br>', '<br><br>')  # 删除乱码
             return hotReviewFormatted
         except:
-            return None
+            return None'''
 
     def _get_new_data(self, page_url, soup, threshold):
         res_data = {}
@@ -58,7 +58,8 @@ class HtmlParser(object):
             res_data['bookName'] = soup.find('span', property='v:itemreviewed').string
             # <strong class="ll rating_num " property="v:average"> 9.3 </strong>
             res_data['score'] = soup.find('strong', class_='ll rating_num ').string
-            if float(res_data['score']) < threshold:  # 评分低于阈值，舍弃
+            #print threshold-float(res_data['score'])
+            if float(res_data['score']) < float(threshold):  # 评分低于阈值，舍弃
                 print 'invalid data'
                 return None
             '''
@@ -75,20 +76,23 @@ class HtmlParser(object):
             </div>
             '''
             info = soup.find('div', id='info')
-            res_data['author'] = info.find(text=' 作者').next_element.next_element.string
+
+            res_data['author'] = info.find(text='作者:').next_element.next_element.string
             res_data['publisher'] = info.find(text='出版社:').next_element
             res_data['time'] = info.find(text='出版年:').next_element
             res_data['price'] = info.find(text='定价:').next_element
             res_data['ISBN'] = info.find(text='ISBN:').next_element.strip()
-            res_data['intro'] = soup.find('div', class_='intro').find('p').string
+            #print res_data['author'],res_data['publisher'],res_data['time'],res_data['price'],res_data['ISBN']
+            #res_data['intro'] = soup.find('div', class_='intro').find('p').string
         except:
-            print 'invalid data'
+            print 'invalid data(信息不详细)'
             return None
-        res_data['hotReview'] = self._get_hot_review(soup)
+        #res_data['hotReview'] = self._get_hot_review(soup)
+        #print res_data['hotReview']
         # 舍弃简介或者热评为空的页面，一般是旧版的书籍
-        if res_data['intro'] == None or res_data['hotReview'] == None or res_data['hotReview'] == 'None':
+        '''if res_data['intro'] == None or res_data['hotReview'] == None or res_data['hotReview'] == 'None':
             print 'invalid data'
-            return None
+            return None'''
 
         return res_data
 
@@ -97,9 +101,16 @@ class HtmlParser(object):
             return
         soup = BeautifulSoup(html_cont, 'html.parser', from_encoding='utf-8')
         new_data = self._get_new_data(page_url, soup, threshold)
-        if new_data is None or new_data['hotReview'] == 'None':
+        if new_data is None:
             new_urls = None
         else:
             new_urls = self._get_new_urls(soup)
 
         return new_urls, new_data
+
+if __name__ == "__main__":
+    Url = "https://book.douban.com/subject/1477390/"
+    downloader = html_downloader.HtmlDownloader()
+    parser=HtmlParser()
+    #print downloader.download(Url)
+    parser.parse(Url,downloader.download(Url),6.9)
