@@ -30,8 +30,9 @@ class SpiderMain(object):
                 self.mongodb.add_404_url(new_url)
             else:
                 new_urls, new_data = self.parser.parse(new_url, html_cont, threshold)  # 分析html，返回urls和data
+                #print new_data
                 self.mongodb.add_new_urls(new_urls, new_data)  # 将获取的urls添加进未爬取的url集合中，排除已爬取过的url
-                self.mongodb.collect_data(new_data, new_urls)  # 连同其推荐书籍一起保存
+                self.mongodb.collect_data(new_data)  # 连同其推荐书籍一起保存
 
             time.sleep(random.uniform(0.1, 0.3))
             if count == 100000:
@@ -53,7 +54,7 @@ if __name__ == "__main__":
     #obj_spider.downloader.save_cookie("cookie1.txt", rootUrl) #未登录运行
     #obj_spider.downloader.save_cookie("cookie2.txt", rootUrl) #登录运行
 
-    obj_spider.craw(rootUrl, 0) #开始爬取，默认最低评分为7.9
+    obj_spider.craw(rootUrl, 7.9) #开始爬取，默认最低评分为7.9
     #obj_spider.mongodb.output_xls() #以xls格式输出爬取结果
 
     print 'All down!'

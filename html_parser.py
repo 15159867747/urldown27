@@ -20,7 +20,7 @@ class HtmlParser(object):
             # recommend = soup.find('div', class_='block5 subject_show knnlike')
             #soup = BeautifulSoup(soup)
             recommend = soup.find( id='db-rec-section')
-            print recommend
+            '''print recommend'''
             all_dd = recommend.find_all('dd')
             for dd in all_dd:
                 # <a href="https://book.douban.com/subject/11614538/" class="">程序员的职业素养</a>
@@ -77,12 +77,12 @@ class HtmlParser(object):
             '''
             info = soup.find('div', id='info')
 
-            res_data['author'] = info.find(text='作者:').next_element.next_element.string
+            #res_data['author'] = info.find(text='作者:').next_element.next_element.string
             res_data['publisher'] = info.find(text='出版社:').next_element
             res_data['time'] = info.find(text='出版年:').next_element
             res_data['price'] = info.find(text='定价:').next_element
             res_data['ISBN'] = info.find(text='ISBN:').next_element.strip()
-            #print res_data['author'],res_data['publisher'],res_data['time'],res_data['price'],res_data['ISBN']
+            #print res_data['author']#,res_data['publisher'],res_data['time'],res_data['price'],res_data['ISBN']
             #res_data['intro'] = soup.find('div', class_='intro').find('p').string
         except:
             print 'invalid data(信息不详细)'

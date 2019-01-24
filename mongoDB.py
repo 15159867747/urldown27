@@ -21,7 +21,7 @@ class MongoDB(object):
         self.bookCol = db.book #选择集合book
         self.notFoundUrls = db.notFoundUrls #选择集合notFoundUrls
         self.userCol = db.user #选择集合user
-        
+
     #url管理器功能
     #保存一个新的url
     def add_new_url(self, url):
@@ -41,27 +41,27 @@ class MongoDB(object):
     #强制加入一个新的url
     def add_new_url_forcibly(self, url):
         self.oldUrlsCol.remove({'url': url})
-        self.newUrlsCol.insert({'url': url})    
-            
+        self.newUrlsCol.insert({'url': url})
+
     def has_new_url(self):
         return self.newUrlsCol.find().count() != 0
-    
+
     def get_new_url(self):
         urlDoc = self.newUrlsCol.find_one()
         self.newUrlsCol.remove(urlDoc)
         self.oldUrlsCol.insert(urlDoc)
         return urlDoc['url']
-    
+
     def add_404_url(self, url):
         self.notFoundUrls.insert({'url':url})
-         
+
     #html输出器功能
-    def collect_data(self, data, recommendUrls):
+    def collect_data(self, data):
         if data is None  == 'None': #存在书籍由于评分过低或者信息不全被舍弃但是还有推荐书籍的情况
             return
-        data['recommendUrls'] = recommendUrls
+        #data['recommendUrls'] = recommendUrls
         self.bookCol.insert(data)
-        
+
     def output_xls(self):
         allDatas = self.bookCol.find()
         w = Workbook() #创建一个工作簿
@@ -82,17 +82,17 @@ class MongoDB(object):
             ws.write( row, 5, data['url'] )
             row += 1
         w.save('GoodBooks.xls') #保存
-        
+
     ###############################################################################
     #与qt_gui来往的方法
     def search_book(self, keyword):
         doc = self.bookCol.find({'bookName': {'$regex': ".*"+ str(keyword) + ".*"}}) #str()将QString转为string
         return doc
-    
+
     def get_user_docs(self):
         doc = self.userCol.find()
         return doc
-    
+
     def add_data_to_user(self, data):
         #需要防止反复添加同一本书
         if 0 == self.userCol.find({'url':data['url']}).count():
@@ -108,7 +108,6 @@ if __name__ == "__main__":
     rootUrl = "https://book.douban.com/subject/1477390/"  # 起始地址为《代码大全》
     mdb=MongoDB()
     mdb.add_new_url(rootUrl)
-    
-    
-    
-    
+
+
+
