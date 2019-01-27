@@ -7,7 +7,7 @@ Created on 2016/4/3
 
 class UrlManager(object):
     def __init__(self):
-        self.new_urls = [] #用列表模拟队列，保证更可能喜欢的书的url在前面
+        self.new_urls = [] #用列表模拟队列，保证更可能喜欢的电影的url在前面
         self.old_urls = set() #已经访问过的url使用set存储就可以了
     
     #添加新的单个url，只添加不在新旧集合中的url

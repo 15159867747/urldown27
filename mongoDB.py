@@ -15,10 +15,10 @@ class MongoDB(object):
     def __init__(self):
         #client = pymongo.MongoClient('localhost', 27017) #连接服务器
         client = pymongo.MongoClient('localhost')
-        db = client['GoodBooks'] #选择数据库
+        db = client['VarietyShows'] #选择数据库
         self.newUrlsCol = db.newUrls #选择集合newUrls
         self.oldUrlsCol = db.oldUrls #选择集合oldUrls
-        self.bookCol = db.book #选择集合book
+        self.varietyCol = db.variety #选择集合variety
         self.notFoundUrls = db.notFoundUrls #选择集合notFoundUrls
         self.userCol = db.user #选择集合user
 
@@ -56,56 +56,29 @@ class MongoDB(object):
         self.notFoundUrls.insert({'url':url})
 
     #html输出器功能
-    def collect_data(self, data):
-        if data is None  == 'None': #存在书籍由于评分过低或者信息不全被舍弃但是还有推荐书籍的情况
+    def collect_data(self, data,recommendUrls):
+        if data is None:
             return
-        #data['recommendUrls'] = recommendUrls
-        self.bookCol.insert(data)
-
-    def output_xls(self):
-        allDatas = self.bookCol.find()
-        w = Workbook() #创建一个工作簿
-        ws = w.add_sheet('sheet1') #创建一个工作表
-        ws.write(0,0,u'序号')
-        ws.write(0,1,u'书名')
-        ws.write(0,2,u'评分')
-        ws.write(0,3,u'价格')
-        ws.write(0,4,u'出版社')
-        ws.write(0,5,u'url')
-        row = 1
-        for data in allDatas:
-            ws.write( row, 0, row )
-            ws.write( row, 1, data['bookName'] )
-            ws.write( row, 2, float(data['score']) )
-            ws.write( row, 3, data['price'] )
-            ws.write( row, 4, data['publisher'] )
-            ws.write( row, 5, data['url'] )
-            row += 1
-        w.save('GoodBooks.xls') #保存
-
-    ###############################################################################
-    #与qt_gui来往的方法
-    def search_book(self, keyword):
-        doc = self.bookCol.find({'bookName': {'$regex': ".*"+ str(keyword) + ".*"}}) #str()将QString转为string
-        return doc
+        data['recommendUrls'] = recommendUrls
+        self.varietyCol.insert(data)
 
     def get_user_docs(self):
         doc = self.userCol.find()
         return doc
 
     def add_data_to_user(self, data):
-        #需要防止反复添加同一本书
+        #需要防止反复添加同一节目
         if 0 == self.userCol.find({'url':data['url']}).count():
             self.userCol.insert(data)
     def remove_data_from_user(self, url):
         self.userCol.remove({'url':url})
 
     def search_book_by_url(self, url):
-        doc = self.bookCol.find_one({'url':url}) #正常情况下url唯一
+        doc = self.varietyCol.find_one({'url':url}) #正常情况下url唯一
         return doc
 
 if __name__ == "__main__":
-    rootUrl = "https://book.douban.com/subject/1477390/"  # 起始地址为《代码大全》
+    rootUrl = "https://book.douban.com/subject/1477390/"
     mdb=MongoDB()
     mdb.add_new_url(rootUrl)
 

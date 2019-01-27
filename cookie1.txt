@@ -2,5 +2,5 @@
 # http://www.netscape.com/newsref/std/cookie_spec.html
 # This is a generated file!  Do not edit.
 
-.douban.com	TRUE	/	FALSE	1579746709	bid	2pEZ4yizYfg
-.douban.com	TRUE	/	FALSE	1579746708	viewed	"1477390"
+.douban.com	TRUE	/	FALSE	1580106756	bid	pNNWjJJpPcM
+.douban.com	TRUE	/	FALSE	1580106756	ll	"118204"

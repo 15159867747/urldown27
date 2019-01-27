@@ -91,10 +91,10 @@ class HtmlDownloader(object):
                 return html_cont
 
 if __name__ == "__main__":
-    Url = "https://book.douban.com/subject/1477390/"
+    Url = "https://movie.douban.com/subject/25908008/"
     downloader = HtmlDownloader()
     parser= html_parser.HtmlParser()
-    print downloader.download(Url)
+    #print downloader.download(Url)
     parser._get_new_urls(downloader.download(Url))
 
 
