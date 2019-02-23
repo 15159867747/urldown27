@@ -73,7 +73,7 @@ class MongoDB(object):
     def remove_data_from_user(self, url):
         self.userCol.remove({'url':url})
 
-    def search_book_by_url(self, url):
+    def search_variety_by_url(self, url):
         doc = self.varietyCol.find_one({'url':url}) #正常情况下url唯一
         return doc
 

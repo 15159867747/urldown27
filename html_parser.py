@@ -52,8 +52,7 @@ class HtmlParser(object):
         a = 0
         zy = "综艺"
         zyjm = "综艺节目"
-        if zy == zyjm:
-            print 'ok'
+
         for link in all_href:
             if link.get_text() == zy or link.get_text() == zyjm:
                 print link.get_text()
@@ -78,7 +77,7 @@ class HtmlParser(object):
                 res_data['actor'] = new_actor
             if info.find(property='v:genre'):
                 res_data['type'] = info.find(property='v:genre').next_element.strip()
-            print res_data['type']
+                print res_data['type']
             if info.find(text='制片国家/地区:'):
                 res_data['area'] = info.find(text='制片国家/地区:').next_element.strip()
                 print res_data['area']

@@ -15,6 +15,8 @@ from requests.exceptions import ConnectionError
 
 
 class HtmlDownloader(object):
+    useCookie1 = False #是否使用cookie
+    changeCookie = False #是否需要更改cookie状态
     '''
     proxy = None
     max_count = 5'''
@@ -115,14 +117,14 @@ class HtmlDownloader(object):
 
     def _download(self, url):
         # 设置cookie信息
-        '''if HtmlDownloader.changeCookie == True:
+        if HtmlDownloader.changeCookie == True:
             HtmlDownloader.changeCookie = False
             if HtmlDownloader.useCookie1 == True: 
                 print 'set cookie1'
                 self._set_cookie('cookie1.txt')
             else:
                 print 'set cookie2'
-                self._set_cookie('cookie2.txt')'''
+                self._set_cookie('cookie2.txt')
 
         Header = 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:40.0) Gecko/20100101 Firefox/40.0'  # 浏览器头描述
         '''headers = {
