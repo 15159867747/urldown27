@@ -30,7 +30,7 @@ class Recommend(object):
             if variety['recommendUrls'] is None: #有些综艺没有推荐的url
                 continue
             for i in variety['recommendUrls']:
-                item = self.mongodb.search_book_by_url(i)
+                item = self.mongodb.search_variety_by_url(i)
                 #如果为“无效综艺”，舍弃
                 if item is None:
                     continue
@@ -61,17 +61,18 @@ class Recommend(object):
                     if j not in self.C[i].keys(): #如果二维字典中没有该键，初始化值为0 ，C[i]
                         self.C[i][j] = 0  #C[快乐大本营][天天向上]
                     self.C[i][j] += 1
-        print self.C.items()
+        '''print self.C.items()
         for i, related_items in self.C.items(): #i 键  related_items 值
             #print i,related_items
             for j, cij in related_items.items():
-                print j,cij
+                print j,cij'''
 
 
     def _cal_matrix_W(self):
         for i, related_items in self.C.items():
             for j, cij in related_items.items():
                 self.W[i][j] = cij / math.sqrt(self.N[i] * self.N[j]) #余弦相似度
+                #print '节目：'+i+'节目：'+j+'之间的相似度为：'+str(self.W[i][j])
 
     def _save_matrix_w(self):
         f = open('matrixW.txt', 'w')
@@ -94,7 +95,7 @@ class Recommend(object):
         print 'cal matrix W...'
         self._cal_matrix_W()
         print 'save matrix...'
-        self._save_matrix_w()
+        #self._save_matrix_w()
 
 
 
@@ -106,14 +107,14 @@ class Recommend(object):
             variety = self.mongodb.search_variety_by_url(i)
             interest = float(variety['score'])
 
-            print variety['varietyname']
+            #print variety['varietyname']
             #j表示某物品，wj表示物品i和物品j的相似度
             #
             #key 主要是用来进行比较的元素，只有一个参数，具体的函数的参数就是取自于可迭代对象中，指定可迭代对象中的一个元素来进行排序。
             #reverse -- 排序规则，reverse = True 降序 ， reverse = False 升序（默认）。
             for j, wj in sorted(self.W[i].items(), key=itemgetter(1), reverse=True)[0:self.k]:
                 #print self.W[i]['']
-                print j,wj
+                #print j,wj
                 #如果已经包含了物品j，跳过
                 if j in urls:
                     continue
@@ -140,12 +141,17 @@ if __name__ == '__main__':
     urls = []
     urls.append('https://movie.douban.com/subject/25894460/?from=subject-page')
     urls.append('https://movie.douban.com/subject/26709000/?from=subject-page')
-    print '推荐的'
+    print '用户收藏的综艺节目：'
+    for i in urls:
+        variety= recommend.mongodb.search_variety_by_url(i)
+        print variety['varietyname']
+    print '-----------------------------------------------'
+    print '根据用户收藏的综艺节目，推荐的列表：'
 
     for i in recommend.itemCF(urls):
         variety = recommend.mongodb.search_variety_by_url(i)
         interest = variety['varietyname']
-        print i,interest
+        print interest
 
     print 'all down!'
 
