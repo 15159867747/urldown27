@@ -15,13 +15,19 @@ class MongoDB(object):
     def __init__(self):
         #client = pymongo.MongoClient('localhost', 27017) #连接服务器
         client = pymongo.MongoClient('localhost')
-        db = client['VarietyShows'] #选择数据库
+        #db = client['VarietyShows'] #选择数据库
+        db = client['test']
+        dbtest = client['test']
+
         self.newUrlsCol = db.newUrls #选择集合newUrls
         self.oldUrlsCol = db.oldUrls #选择集合oldUrls
         self.varietyCol = db.variety #选择集合variety
         self.notFoundUrls = db.notFoundUrls #选择集合notFoundUrls
         self.userCol = db.user #选择集合user
 
+        self.ratingscol=dbtest.ratings
+        self.moviescol=dbtest.movies
+        self.varietyColtest=dbtest.varity
     #url管理器功能
     #保存一个新的url
     def add_new_url(self, url):
@@ -77,10 +83,37 @@ class MongoDB(object):
         doc = self.varietyCol.find_one({'url':url}) #正常情况下url唯一
         return doc
 
+    def changetestdata(self,userId):
+        doc = self.ratingscol.find({'userId':userId}) #正常情况下url唯一
+        likevarity = []
+        for tmp in doc:
+            if float(tmp['rating'])>=4:
+                likevarity.append(tmp['movieId'])
+
+        return likevarity
+
+
+
+        # return doc
+
+    def add_like_varitytest(self, userid,likevarity):
+        if likevarity:
+            self.varietyColtest.insert({'userid': userid,'like': likevarity})
+        #self.varietyColtest.insert({'like': likevarity})
+
 if __name__ == "__main__":
     rootUrl = "https://book.douban.com/subject/1477390/"
     mdb=MongoDB()
-    mdb.add_new_url(rootUrl)
+
+    #mdb.add_new_url(rootUrl)
+    n=1
+
+    while n<=259137:   #259137
+        print n
+        mdb.add_like_varitytest(n,mdb.changetestdata(n))
+        n=n+1
+
+
 
 
 

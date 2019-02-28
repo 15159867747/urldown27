@@ -50,7 +50,8 @@ class SpiderMain(object):
 
 
 if __name__ == "__main__":
-    rootUrl = "https://movie.douban.com/subject/25908008/"  # 起始地址为快乐大本营
+    #rootUrl = "https://movie.douban.com/subject/25908008/"  # 起始地址为快乐大本营
+    rootUrl ="https://movie.douban.com/subject/25864078/" #今晚80后脱口秀
     #https://movie.douban.com/subject/26266636/?from=subject-page
     obj_spider = SpiderMain()
     # 爬取之前先保存两个cookie文件，防止403forbidden
