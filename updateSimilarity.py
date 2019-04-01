@@ -185,7 +185,7 @@ class ItemBasedCF():
                     rj=float(self.averagetv[related_movie])/float(self.movie_popular[related_movie])
                     rank[related_movie] += w*(float(rating)-rj)/abs(w)   #计算用户对该电影的兴趣
         for i in rank:
-            print 'rank',rank
+            #print 'rank',rank      #rank {'2712': 3.784855769230769, '2710': 4.0,
             rank[i]=float(self.averagetv[i])/float(self.movie_popular[i])+rank[i]
 
 

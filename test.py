@@ -5,7 +5,7 @@ import random
 
 import math,pickle
 from operator import itemgetter
-
+import redismanage
 
 class ItemBasedCF():
     # 初始化参数
@@ -24,6 +24,8 @@ class ItemBasedCF():
         self.movie_count = 0
 
         self.load_data()
+
+        self.redisdb=redismanage.RedisManage()#redis
 
 
         print('Similar movie number = %d' % self.n_sim_movie)
@@ -116,6 +118,7 @@ class ItemBasedCF():
                 else:
                     #计算出电影m1和m2的相似度
                     self.movie_sim_matrix[m1][m2] = count / math.sqrt(self.movie_popular[m1] * self.movie_popular[m2])
+                    self.redisdb.setSim(m1,m2,self.movie_sim_matrix[m1][m2])
                     #print self.movie_sim_matrix[m1][m2]
         print('Calculate movie similarity matrix success!')
 
